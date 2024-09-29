@@ -1,0 +1,33 @@
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingredientsContainer {
+    height: 700px; 
+    overflow-y: scroll; 
+    padding-right: 8px;
+}
+
+.ingredientsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ingredientsList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ingredientsList::-webkit-scrollbar-thumb {
+    background-color: #1c1c21;
+    border-radius: 4px;
+}

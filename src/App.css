@@ -13,16 +13,6 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
 .App-link {
   color: #61dafb;
@@ -35,4 +25,46 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.AppHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #000;
+  padding: 20px;
+}
+
+.BurgerIngredients {
+  width: 55%; /* Ширина для ингредиентов */
+  padding-right: 40px; /* Отступ справа */
+  overflow-y: auto; /* Добавляем скролл для ингредиентов */
+}
+
+.BurgerConstructor {
+  width: 40%; /* Ширина для конструктора */
+
+  border-radius: 10px;
+  padding: 20px;
+  max-height: 80vh; /* Ограничиваем высоту */
+
+
+  margin-top: auto; /* Выровнять относительно блока с ингредиентами */
+  align-self: flex-start; /* Выровнять конструктор относительно начала контейнера */
 }
