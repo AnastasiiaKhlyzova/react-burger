@@ -5,14 +5,17 @@ import styles from './app-header.module.css';
 
 type Tab = "Конструктор" | "Лента заказов" | "Личный кабинет";
 
-const AppHeader: React.FC = () => {
-    const [isActive, setIsActive] = useState<Tab>('Конструктор');
+interface AppHeaderProps {
+    className?: string; 
+  }
+  
+  const AppHeader: React.FC<AppHeaderProps> = ({ className }) => {
+      const [isActive, setIsActive] = useState<Tab>('Конструктор');
 
     return (
         <header className={`pt-4 pb-4 ${styles.header}`}>
             <div className={`${styles.container}`}>
-                <nav className={styles.nav}>
-                    <ul className={styles.navList}>
+                <ul className={styles.navList}>
                         <NavBarItem
                             icon={<BurgerIcon type={isActive === "Конструктор" ? "primary" : "secondary"} />}
                             text="Конструктор"
@@ -26,11 +29,9 @@ const AppHeader: React.FC = () => {
                             setActive={() => setIsActive("Лента заказов")}
                         />
                     </ul>
-                </nav>
-                <div className={`${styles.logo} pl-5 pr-5`}>
+                <div className={`${styles.logo} `}>
                     <Logo />
                 </div>
-                 <nav className={styles.nav}>
                     <ul className={styles.navList}>
                         <NavBarItem
                             icon={<ProfileIcon type={isActive === "Личный кабинет" ? "primary" : "secondary"} />}
@@ -39,7 +40,6 @@ const AppHeader: React.FC = () => {
                             setActive={() => setIsActive("Личный кабинет")}
                         />
                     </ul>
-                </nav>
             </div>
         </header>
     );

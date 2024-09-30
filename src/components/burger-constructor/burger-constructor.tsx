@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
+import Modal from '../modal/modal'; 
+import OrderDetails from '../order-details/order-details';
 
 interface Ingredient {
     _id: string;
@@ -13,17 +15,28 @@ interface Ingredient {
 
 interface Props {
     ingredients: Ingredient[];
+    className?: string;
 }
 
-const BurgerConstructor: React.FC<Props> = ({ ingredients }) => {
+const BurgerConstructor: React.FC<Props> = ({ ingredients, className }) => {
      
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
    
      const bun = ingredients.find(item => item.type === 'bun');
      const filterIngredients = ingredients.filter(item => item.type !== 'bun');
      const totalPrice = (bun ? bun.price * 2 : 0) + filterIngredients.reduce((acc, item) => acc + item.price, 0);
     
      return (
-        <section className={`${styles.constructorContainer} pt-6 pb-6`}>
+        <section className={`${className} ${styles.constructorContainer} `}>
             <div className={styles.ingredientsContainer}>
                 {bun && <BurgerConstructorItem item={bun} isLocked={true} />}
                 {filterIngredients.map((item, index) => (
@@ -36,10 +49,15 @@ const BurgerConstructor: React.FC<Props> = ({ ingredients }) => {
                     <span className="text text_type_digits-medium">{totalPrice}</span>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button type="primary" size="medium" htmlType="button">
+                <Button type="primary" size="medium" htmlType="button" onClick={handleOpenModal}>
                     Оформить заказ
                 </Button>
             </div>
+            {isModalOpen && (
+                <Modal onClose={handleCloseModal}>
+                    <OrderDetails /> 
+                </Modal>
+                 )}
         </section>
     );
  };

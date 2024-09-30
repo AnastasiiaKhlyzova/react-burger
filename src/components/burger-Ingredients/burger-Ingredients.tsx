@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientItem from './ingredient-item/ingredient-item';
 import styles from './burger-ingredients.module.css';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import Modal from '../modal/modal';
 
 
 interface Ingredient {
@@ -22,14 +24,26 @@ interface Ingredient {
 
 interface Props {
    ingredients: Ingredient[];
+   className?: string;
 }
 
-const BurgerIngredients: React.FC<Props> = ({ ingredients }) => {
+const BurgerIngredients: React.FC<Props> = ({ ingredients, className  }) => {
     const [current, setCurrent] = React.useState('Булки');
+    const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null); 
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    const handleIngredientClick = (ingredient: Ingredient) => {
+        setSelectedIngredient(ingredient);
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+        setSelectedIngredient(null);
+    };
 
        return (
-        <section className={`${styles.container} pt-5`}>
-            <h1 className="text text_type_main-large pb-5">Соберите бургер</h1>
+        <section className={`${className} ${styles.container}`}>
             <div className={styles.tabs}>
                 <Tab value="Булки" active={current === 'Булки'} onClick={setCurrent}>
                     Булки
@@ -42,34 +56,44 @@ const BurgerIngredients: React.FC<Props> = ({ ingredients }) => {
                 </Tab>
             </div>
 
-            <div className={styles.ingredientsContainer}>
-                <h2 className="text text_type_main-medium pt-5 pb-2">Булки</h2>
+            <div className={`${styles.ingredientsContainer}`}>
+                <h2 className="text text_type_main-medium pt-5 pb-5">Булки</h2>
                 <div className={styles.ingredientsList}>
                     {ingredients
                         .filter(item => item.type === 'bun')
                         .map(item => (
-                            <IngredientItem key={item._id} item={item} />
+                            <div onClick={() => handleIngredientClick(item)} key={item._id}>
+                                <IngredientItem item={item} />
+                            </div>
                         ))}
                 </div>
-
-                <h2 className="text text_type_main-medium pt-5 pb-2">Соусы</h2>
+                <h2 className="text text_type_main-medium pt-5 pb-5">Соусы</h2>
                 <div className={styles.ingredientsList}>
                     {ingredients
                         .filter(item => item.type === 'sauce')
                         .map(item => (
-                            <IngredientItem key={item._id} item={item} />
+                            <div onClick={() => handleIngredientClick(item)} key={item._id}>
+                                <IngredientItem item={item} />
+                            </div>
                         ))}
                 </div>
 
-                <h2 className="text text_type_main-medium pt-5 pb-2">Начинки</h2>
+                <h2 className="text text_type_main-medium pt-5 pb-5">Начинки</h2>
                 <div className={styles.ingredientsList}>
                     {ingredients
                         .filter(item => item.type === 'main')
                         .map(item => (
-                            <IngredientItem key={item._id} item={item} />
+                            <div onClick={() => handleIngredientClick(item)} key={item._id}>
+                                <IngredientItem item={item} />
+                            </div>
                         ))}
                 </div>
             </div>
+            {isModalOpen && selectedIngredient && (
+                <Modal title="Детали ингредиента" onClose={closeModal}>
+                    <IngredientDetails ingredient={selectedIngredient} />
+                </Modal>
+            )}
         </section>
     );
 };

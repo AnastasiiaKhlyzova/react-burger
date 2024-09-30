@@ -1,9 +1,10 @@
 .container {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
+    overflow-y: hidden; 
+    max-height: 76vh; 
 }
 
 .tabs {
@@ -12,9 +13,9 @@
 }
 
 .ingredientsContainer {
-    height: 700px; 
-    overflow-y: scroll; 
+    overflow-y: auto; 
     padding-right: 8px;
+    scrollbar-width: none; 
 }
 
 .ingredientsList {
@@ -23,11 +24,6 @@
     gap: 20px;
 }
 
-.ingredientsList::-webkit-scrollbar {
-    width: 8px;
-}
-
-.ingredientsList::-webkit-scrollbar-thumb {
-    background-color: #1c1c21;
-    border-radius: 4px;
+.ingredientsContainer::-webkit-scrollbar {
+    display: none;
 }

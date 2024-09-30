@@ -1,10 +1,22 @@
-.item {
+.itemContainer {
     display: flex;
     align-items: center;
+    gap: 4px; 
+}
+
+.dragIconContainer {
+    width: 24px;
+    height: 24px; 
+}
+
+.item {
+    display: flex;
+    align-items: center; 
     justify-content: space-between;
     border-radius: 20px;
     background-color: #1C1C21;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень и фон остаются в CSS */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    flex-grow: 1;
 }
 
 .image {
@@ -22,3 +34,5 @@
     align-items: center;
     gap: 8px;
 }
+
+
