@@ -5,25 +5,11 @@ import IngredientItem from './ingredient-item/ingredient-item';
 import styles from './burger-ingredients.module.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
+import { Ingredient } from '../../utils/types';
 
-
-interface Ingredient {
-   _id: string;
-   name: string;
-   type: 'bun' | 'sauce' | 'main';
-   proteins: number;
-   fat: number;
-   carbohydrates: number;
-   calories: number;
-   price: number;
-   image: string;
-   image_mobile: string;
-   image_large: string;
-   __v: number;
-}
 
 interface Props {
-   ingredients: Ingredient[];
+    ingredients: Ingredient[];
    className?: string;
 }
 

@@ -15,7 +15,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({item}) => {
     return (
         <div className={`${styles.item} pl-4 pr-4 mb-8`}>
             <Counter  count={item.__v} size='default'/>
-                <img className={`${styles.image}`} src={item.image} alt={Image.name} />
+                <img className={`${styles.image}`} src={item.image} alt={item.name} />
                     <div className={`${styles.price} mt=1 mb=1`}>
                         <span className="text text_type_digits-default">{item.price}</span>
                         <CurrencyIcon type='primary' />

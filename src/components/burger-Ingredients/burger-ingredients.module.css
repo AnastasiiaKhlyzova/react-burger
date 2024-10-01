@@ -1,10 +1,9 @@
 .container {
-    width: 100%;
     max-width: 600px;
     display: flex;
     flex-direction: column;
     overflow-y: hidden; 
-    max-height: 76vh; 
+    max-height: 78vh; 
 }
 
 .tabs {
@@ -14,7 +13,6 @@
 
 .ingredientsContainer {
     overflow-y: auto; 
-    padding-right: 8px;
     scrollbar-width: none; 
 }
 
