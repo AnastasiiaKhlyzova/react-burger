@@ -1,0 +1,36 @@
+.constructorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+  
+}
+
+.ingredientsContainer {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: calc(70vh - 200px);
+    gap: 16px; 
+    width: 100%;
+    scrollbar-width: none; 
+}
+
+.ingredientsContainer::-webkit-scrollbar {
+    display: none; 
+}
+
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+    width: 100%;
+    padding: 20px;
+}
+
+.totalPrice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

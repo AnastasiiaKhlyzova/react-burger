@@ -1,0 +1,27 @@
+.container {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden; 
+    max-height: 78vh; 
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingredientsContainer {
+    overflow-y: auto; 
+    scrollbar-width: none; 
+}
+
+.ingredientsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ingredientsContainer::-webkit-scrollbar {
+    display: none;
+}
