@@ -1,5 +1,5 @@
 import React from 'react';
-import useFetch from '../../hooks/useFetch';
+
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-Ingredients/burger-Ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -7,17 +7,7 @@ import styles from './app.module.css';
 
 function App() {
   
-  const { data, loading, error } = useFetch();
-
-  if (loading) {
-      return <p>Загрузка...</p>;
-  }
-
-  if (error) {
-      return <p>Ошибка: {error}</p>;
-  }
-
-  return (
+return (
     <div className={styles.wrapper}>
       <AppHeader />
       <div className={styles.headerWrapper}>
@@ -25,8 +15,8 @@ function App() {
       <main>
         <h1 className={`text text_type_main-large mb-5 mt-8`}>Соберите бургер</h1>
         <div className={`${styles.content} mt-20`}>
-          <BurgerIngredients className={styles.BurgerIngredients} ingredients={data} />
-          <BurgerConstructor className={styles.BurgerConstructor} ingredients={data} />
+          <BurgerIngredients className={styles.BurgerIngredients}  />
+          <BurgerConstructor className={styles.BurgerConstructor}  />
         </div>
       </main>
     </div>

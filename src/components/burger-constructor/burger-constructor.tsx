@@ -4,35 +4,45 @@ import styles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal'; 
 import OrderDetails from '../order-details/order-details';
-import { Ingredient } from '../../utils/types';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../../services/store';
+import { setOrder, clearOrder } from '../../services/order-slice';
+
 
 interface Props {
-    ingredients: Ingredient[];
+  
     className?: string;
 }
 
-const BurgerConstructor: React.FC<Props> = ({ ingredients, className }) => {
+const BurgerConstructor: React.FC<Props> = ({ className }) => {
      
     const [isModalOpen, setModalOpen] = useState(false);
+    const dispatch = useDispatch<AppDispatch>();
+
+    const { bun, burgerIngredients} = useSelector((state:RootState) => state.burgerConstructor)
 
     const handleOpenModal = () => {
-        setModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
+        const order = {
+          id: '444', 
+          status: 'готовится',
+        };
+        dispatch(setOrder(order)); 
+        setModalOpen(true); 
+      };
+    
+      const handleCloseModal = () => {
         setModalOpen(false);
-    };
+        dispatch(clearOrder()); 
+      };
 
-    const bun = ingredients.find(item => item.type === 'bun');
-    const filterIngredients = ingredients.filter(item => item.type !== 'bun');
-    const totalPrice = (bun ? bun.price * 2 : 0) + filterIngredients.reduce((acc, item) => acc + item.price, 0);
+    const totalPrice = (bun ? bun.price * 2 : 0) + burgerIngredients.reduce((acc, item) => acc + item.price, 0);
     
     return (
         <section className={`${className} ${styles.constructorContainer}`}>
         {bun && <BurgerConstructorItem item={bun} isLocked={true} type="top"  className='ml-6 mb-4'/>} 
         
         <div className={styles.ingredientsContainer}>
-            {filterIngredients.map((item, index) => (
+            {burgerIngredients.map((item, index) => (
                 <BurgerConstructorItem key={item._id + index} item={item} />
             ))}
         </div>

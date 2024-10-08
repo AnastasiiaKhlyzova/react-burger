@@ -1,32 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientItem from './ingredient-item/ingredient-item';
 import styles from './burger-ingredients.module.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../services/store';
+import { RootState } from '../../services/store';
 import { Ingredient } from '../../utils/types';
-
+import { fetchIngredients } from '../../services/ingredients-slice';
+import { setCurrentIngredient, clearCurrentIngredient } from '../../services/current-ingredient-slice'; 
 
 interface Props {
-    ingredients: Ingredient[];
+  
    className?: string;
 }
 
-const BurgerIngredients: React.FC<Props> = ({ ingredients, className  }) => {
+const BurgerIngredients: React.FC<Props> = ({  className  }) => {
     const [current, setCurrent] = React.useState('Булки');
-    const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null); 
     const [isModalOpen, setModalOpen] = useState(false);
 
+    const dispatch = useDispatch<AppDispatch>()
+    const { ingredients, status, error } = useSelector((state: RootState) => state.ingredients);
+    const currentIngredient = useSelector((state: RootState) => state.currentIngredient.currentIngredient);
+
+    useEffect(() => {
+        dispatch(fetchIngredients());
+    }, [dispatch]);
+
     const handleIngredientClick = (ingredient: Ingredient) => {
-        setSelectedIngredient(ingredient);
+        dispatch(setCurrentIngredient(ingredient));
         setModalOpen(true);
     };
 
     const closeModal = () => {
         setModalOpen(false);
-        setSelectedIngredient(null);
+        dispatch(clearCurrentIngredient());
+        
     };
+
+    if (status === 'loading') {
+        return <p>Загрузка ингредиентов...</p>;
+    }
+
+    if (status === 'failed') {
+        return <p>Ошибка: {error}</p>;
+    }
 
        return (
         <section className={`${className} ${styles.container}`}>
@@ -75,9 +95,9 @@ const BurgerIngredients: React.FC<Props> = ({ ingredients, className  }) => {
                         ))}
                 </div>
             </div>
-            {isModalOpen && selectedIngredient && (
+            {isModalOpen && currentIngredient && (
                 <Modal title="Детали ингредиента" onClose={closeModal}>
-                    <IngredientDetails ingredient={selectedIngredient} />
+                    <IngredientDetails ingredient={currentIngredient} />
                 </Modal>
             )}
         </section>
