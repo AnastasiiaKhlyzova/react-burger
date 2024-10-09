@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { DndProvider } from 'react-dnd'; 
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-Ingredients/burger-Ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -8,6 +9,7 @@ import styles from './app.module.css';
 function App() {
   
 return (
+  <DndProvider backend={HTML5Backend}>
     <div className={styles.wrapper}>
       <AppHeader />
       <div className={styles.headerWrapper}>
@@ -20,6 +22,7 @@ return (
         </div>
       </main>
     </div>
+    </DndProvider>
   );
 }
 

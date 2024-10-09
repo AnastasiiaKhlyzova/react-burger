@@ -33,6 +33,18 @@ const ingredientsSlice = createSlice({
         setIngredients: (state, action: PayloadAction<Ingredient[]>) => {
             state.ingredients = action.payload;
         },
+        incrementIngredientCount: (state, action: PayloadAction<string>) => {
+            const ingredient = state.ingredients.find(i => i._id === action.payload);
+            if (ingredient) {
+              ingredient.__v += 1; 
+            }
+          },
+          decrementIngredientCount: (state, action: PayloadAction<string>) => {
+            const ingredient = state.ingredients.find(i => i._id === action.payload);
+            if (ingredient && ingredient.__v > 0) {
+              ingredient.__v -= 1; 
+            }
+          },
     },
     extraReducers: (builder) => {
         builder
@@ -51,5 +63,5 @@ const ingredientsSlice = createSlice({
     },
 });
   
-  export const { setIngredients } = ingredientsSlice.actions;
+  export const { setIngredients, incrementIngredientCount, decrementIngredientCount } = ingredientsSlice.actions;
   export default ingredientsSlice.reducer;
