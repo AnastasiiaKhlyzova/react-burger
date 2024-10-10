@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientItem from './ingredient-item/ingredient-item';
 import styles from './burger-ingredients.module.css';
@@ -10,13 +10,10 @@ import { Ingredient } from '../../utils/types';
 import { fetchIngredients } from '../../services/ingredients-slice';
 import { setCurrentIngredient, clearCurrentIngredient } from '../../services/current-ingredient-slice'; 
 
-interface Props {
-  className?: string;
-}
 
-const BurgerIngredients: React.FC<Props> = ({ className }) => {
+const BurgerIngredients: React.FC = () => {
   const [current, setCurrent] = useState('Булки');
-  const [isModalOpen, setModalOpen] = useState(false);
+  
 
   const dispatch = useDispatch<AppDispatch>();
   const { ingredients, status, error } = useSelector((state: RootState) => state.ingredients);
@@ -33,11 +30,9 @@ const BurgerIngredients: React.FC<Props> = ({ className }) => {
 
   const handleIngredientClick = (ingredient: Ingredient) => {
     dispatch(setCurrentIngredient(ingredient));
-    setModalOpen(true);
   };
 
   const closeModal = () => {
-    setModalOpen(false);
     dispatch(clearCurrentIngredient());
   };
 
@@ -79,6 +74,18 @@ const BurgerIngredients: React.FC<Props> = ({ className }) => {
   }, []);
   
 
+  const { buns, sauces, fillings } = useMemo(() => {
+    const categorized = { buns: [] as Ingredient[], sauces: [] as Ingredient[], fillings: [] as Ingredient[] };
+
+    ingredients.forEach((item) => {
+      if (item.type === 'bun') categorized.buns.push(item);
+      else if (item.type === 'sauce') categorized.sauces.push(item);
+      else categorized.fillings.push(item);
+    });
+
+    return categorized;
+  }, [ingredients]);
+
  if (status === 'loading') {
     return <p>Загрузка ингредиентов...</p>;
   }
@@ -88,7 +95,7 @@ const BurgerIngredients: React.FC<Props> = ({ className }) => {
   }
 
   return (
-    <section className={`${className} ${styles.container}`}>
+    <section className={`${styles.container}`}>
       <div className={styles.tabs}>
         <Tab value="Булки" active={current === 'Булки'} onClick={() => handleTabClick('Булки')}>
           Булки
@@ -106,12 +113,10 @@ const BurgerIngredients: React.FC<Props> = ({ className }) => {
           Булки
         </h2>
         <div className={styles.ingredientsList}>
-          {ingredients
-            .filter((item) => item.type === 'bun')
-            .map((item) => (
-              <div onClick={() => handleIngredientClick(item)} key={item._id}>
-                <IngredientItem item={item} />
-              </div>
+          {buns.map((item) => (
+            <div onClick={() => handleIngredientClick(item)} key={item._id}>
+              <IngredientItem item={item} />
+            </div>
             ))}
         </div>
 
@@ -119,12 +124,10 @@ const BurgerIngredients: React.FC<Props> = ({ className }) => {
           Соусы
         </h2>
         <div className={styles.ingredientsList}>
-          {ingredients
-            .filter((item) => item.type === 'sauce')
-            .map((item) => (
-              <div onClick={() => handleIngredientClick(item)} key={item._id}>
-                <IngredientItem item={item} />
-              </div>
+        {sauces.map((item) => (
+            <div onClick={() => handleIngredientClick(item)} key={item._id}>
+              <IngredientItem item={item} />
+            </div>
             ))}
         </div>
 
@@ -132,17 +135,15 @@ const BurgerIngredients: React.FC<Props> = ({ className }) => {
           Начинки
         </h2>
         <div className={styles.ingredientsList}>
-          {ingredients
-            .filter((item) => item.type === 'main')
-            .map((item) => (
-              <div onClick={() => handleIngredientClick(item)} key={item._id}>
-                <IngredientItem item={item} />
-              </div>
+        {fillings.map((item) => (
+            <div onClick={() => handleIngredientClick(item)} key={item._id}>
+              <IngredientItem item={item} />
+            </div>
             ))}
         </div>
       </div>
 
-      {isModalOpen && currentIngredient && (
+      {currentIngredient && (
         <Modal title="Детали ингредиента" onClose={closeModal}>
           <IngredientDetails ingredient={currentIngredient} />
         </Modal>

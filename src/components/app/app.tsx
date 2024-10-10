@@ -17,8 +17,8 @@ return (
       <main>
         <h1 className={`text text_type_main-large mb-5 mt-8`}>Соберите бургер</h1>
         <div className={`${styles.content} mt-20`}>
-          <BurgerIngredients className={styles.BurgerIngredients}  />
-          <BurgerConstructor className={styles.BurgerConstructor}  />
+          <BurgerIngredients />
+          <BurgerConstructor />
         </div>
       </main>
     </div>

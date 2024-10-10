@@ -12,11 +12,8 @@ import { addIngredient, removeIngredient, moveIngredient } from '../../services/
 import { decrementIngredientCount } from '../../services/ingredients-slice';
 import { Ingredient } from '../../utils/types';
 
-interface Props {
-  className?: string;
-}
 
-const BurgerConstructor: React.FC<Props> = ({ className }) => {
+const BurgerConstructor: React.FC = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -65,7 +62,7 @@ const BurgerConstructor: React.FC<Props> = ({ className }) => {
     }, [bun, burgerIngredients]);
 
     return (
-        <section ref={dropRef} className={`${className} ${styles.constructorContainer} ${isOver ? styles.isOver : ''}`}>
+        <section ref={dropRef} className={`${styles.constructorContainer} ${isOver ? styles.isOver : ''}`}>
             {bun && <BurgerConstructorItem item={bun} isLocked={true} type="top" className='ml-6 mb-4' />}
             
             <div className={styles.ingredientsContainer}>
