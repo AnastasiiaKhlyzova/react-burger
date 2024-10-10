@@ -20,7 +20,7 @@ const OrderDetails: React.FC = () => {
   return (
     <div className={styles.container}>
     
-      <p className="text text_type_digits-large">{order.id}</p>
+      <p className="text text_type_digits-large">{order.number}</p>
       <p className="text text_type_main-medium pt-8">идентификатор заказа</p>
 
       <div className={`${styles.icon} pt-15 pb-15`}>

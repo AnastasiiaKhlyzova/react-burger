@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
-import Modal from '../modal/modal'; 
+import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../services/store';
-import { setOrder, clearOrder } from '../../services/order-slice';
-import { Ingredient } from '../../utils/types';
-import { addIngredient, removeIngredient } from '../../services/burger-constructor-slice';
+import { placeOrder, clearOrder } from '../../services/order-slice';
+import { addIngredient, removeIngredient, moveIngredient } from '../../services/burger-constructor-slice';
 import { decrementIngredientCount } from '../../services/ingredients-slice';
+import { Ingredient } from '../../utils/types';
 
 interface Props {
   className?: string;
@@ -21,24 +21,31 @@ const BurgerConstructor: React.FC<Props> = ({ className }) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const { bun, burgerIngredients } = useSelector((state: RootState) => state.burgerConstructor);
+  
 
-    const [{ isOver }, dropRef] = useDrop(() => ({
+    const moveIngredientHandler = useCallback((dragIndex: number, hoverIndex: number) => {
+        dispatch(moveIngredient({ dragIndex, hoverIndex }));
+    }, [dispatch]);
+
+    const [{ isOver }, dropRef] = useDrop({
         accept: 'ingredient',
-        drop: (item: Ingredient) => {
-            dispatch(addIngredient(item)); 
+        drop: (item: Ingredient & { uniqueId?: string }) => {
+          
+            const isAlreadyInConstructor = item.uniqueId !== undefined;
+
+            if (!isAlreadyInConstructor) {
+                dispatch(addIngredient(item)); 
+            }
         },
-        collect: monitor => ({
+        collect: (monitor) => ({
             isOver: !!monitor.isOver(),
         }),
-    }));
+    });
 
     const handleOpenModal = () => {
-        const order = {
-            id: '444',
-            status: 'готовится',
-        };
-        dispatch(setOrder(order));
-        setModalOpen(true);
+        const ingredientIds = [...burgerIngredients.map(item => item._id)];
+        if (bun) ingredientIds.push(bun._id, bun._id);
+        dispatch(placeOrder(ingredientIds)).then(() => setModalOpen(true));
     };
 
     const handleCloseModal = () => {
@@ -48,12 +55,14 @@ const BurgerConstructor: React.FC<Props> = ({ className }) => {
 
     const handleRemoveIngredient = (uniqueId: string | undefined, _id: string) => {
         if (uniqueId) {
-            dispatch(removeIngredient(uniqueId)); 
-            dispatch(decrementIngredientCount(_id)); 
+            dispatch(removeIngredient(uniqueId));
+            dispatch(decrementIngredientCount(_id));
         }
     };
 
-    const totalPrice = useMemo(() => (bun ? bun.price * 2 : 0) + burgerIngredients.reduce((acc, item) => acc + item.price, 0), [bun, burgerIngredients]);
+    const totalPrice = useMemo(() => {
+        return (bun ? bun.price * 2 : 0) + burgerIngredients.reduce((acc, item) => acc + item.price, 0);
+    }, [bun, burgerIngredients]);
 
     return (
         <section ref={dropRef} className={`${className} ${styles.constructorContainer} ${isOver ? styles.isOver : ''}`}>
@@ -63,8 +72,10 @@ const BurgerConstructor: React.FC<Props> = ({ className }) => {
                 {burgerIngredients.map((item, index) => (
                     <BurgerConstructorItem
                         key={item.uniqueId}
+                        index={index}
                         item={item}
-                        handleRemove={() => handleRemoveIngredient(item.uniqueId, item._id)} // Удаление ингредиента
+                        moveIngredient={moveIngredientHandler}
+                        handleRemove={() => handleRemoveIngredient(item.uniqueId, item._id)}
                     />
                 ))}
             </div>

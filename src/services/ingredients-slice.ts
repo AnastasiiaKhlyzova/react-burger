@@ -1,31 +1,29 @@
-import { createSlice, PayloadAction, createAsyncThunk,  } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { Ingredient, IngredientsState } from '../utils/types';
 import { API_URL } from '../utils/constants';
-
 
 const initialState: IngredientsState = {
     ingredients: [],
     status: 'idle',
     error: null,
-  };
+};
 
-  export const fetchIngredients = createAsyncThunk(
+export const fetchIngredients = createAsyncThunk(
     'ingredients/fetchIngredients',
     async (_, { rejectWithValue }) => {
-      try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-          throw new Error('Failed to fetch ingredients');
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error('Failed to fetch ingredients');
+            }
+            const data = await response.json();
+            return data.data as Ingredient[];
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
         }
-        const data = await response.json();
-        console.log('Fetched data:', data); 
-        return data.data as Ingredient[]; 
-      } catch (error) {
-        return rejectWithValue((error as Error).message);
-      }
     }
-  );
-  
+);
+
 const ingredientsSlice = createSlice({
     name: 'ingredients',
     initialState,
@@ -36,15 +34,15 @@ const ingredientsSlice = createSlice({
         incrementIngredientCount: (state, action: PayloadAction<string>) => {
             const ingredient = state.ingredients.find(i => i._id === action.payload);
             if (ingredient) {
-              ingredient.__v += 1; 
+                ingredient.__v += 1; 
             }
-          },
-          decrementIngredientCount: (state, action: PayloadAction<string>) => {
+        },
+        decrementIngredientCount: (state, action: PayloadAction<string>) => {
             const ingredient = state.ingredients.find(i => i._id === action.payload);
             if (ingredient && ingredient.__v > 0) {
-              ingredient.__v -= 1; 
+                ingredient.__v -= 1; 
             }
-          },
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -62,6 +60,6 @@ const ingredientsSlice = createSlice({
             });
     },
 });
-  
-  export const { setIngredients, incrementIngredientCount, decrementIngredientCount } = ingredientsSlice.actions;
-  export default ingredientsSlice.reducer;
+
+export const { setIngredients, incrementIngredientCount, decrementIngredientCount } = ingredientsSlice.actions;
+export default ingredientsSlice.reducer;

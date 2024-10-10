@@ -30,13 +30,24 @@ export interface CurrentIngredientState {
   }
 
 
-export interface Order {
-    id: string;
-    status: string;
+  export interface Order {
+    number: number;
   }
   
 export interface OrderState {
     order: Order | null;
-    status: 'idle' | 'loading' | 'succeeded';
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
+  }
+
+export interface OrderResponse {
+    name: string;
+    order: {
+      number: number;
+    };
+    success: boolean;
+  }
+  
+export interface ErrorResponse {
+    message: string;
   }

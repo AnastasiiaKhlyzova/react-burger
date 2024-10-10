@@ -19,16 +19,18 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ item }) => {
         item: { ...item },
         end: (draggedItem, monitor) => {
             if (monitor.didDrop()) {
-                dispatch(incrementIngredientCount(item._id));
+                dispatch(incrementIngredientCount(item._id));  
             }
         }
     }));
 
+
     const { bun, burgerIngredients } = useSelector((state: RootState) => state.burgerConstructor);
+
 
     const count = useMemo(() => {
         if (item.type === 'bun') {
-            return bun && bun._id === item._id ? 2 : 0;
+            return bun && bun._id === item._id ? 2 : 0; 
         } else {
             return burgerIngredients.filter(ingredient => ingredient._id === item._id).length;
         }
