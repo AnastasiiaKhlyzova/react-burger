@@ -77,12 +77,13 @@ const BurgerIngredients: React.FC = () => {
   const { buns, sauces, fillings } = useMemo(() => {
     const categorized = { buns: [] as Ingredient[], sauces: [] as Ingredient[], fillings: [] as Ingredient[] };
 
+    
     ingredients.forEach((item) => {
       if (item.type === 'bun') categorized.buns.push(item);
       else if (item.type === 'sauce') categorized.sauces.push(item);
       else categorized.fillings.push(item);
     });
-
+    
     return categorized;
   }, [ingredients]);
 

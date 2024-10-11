@@ -16,11 +16,19 @@ const BurgerConstructorSlice = createSlice({
     name: 'burger-constructor',
     initialState,
     reducers: {
-        addIngredient: (state, action: PayloadAction<Ingredient>) => {
-            if (action.payload.type === 'bun') {
-                state.bun = action.payload; 
-            } else {
-                state.burgerIngredients.push({ ...action.payload, uniqueId: nanoid() }); 
+    addIngredient: {
+            reducer: (state, action: PayloadAction<Ingredient>) => {
+                if (action.payload.type === 'bun') {
+                    state.bun = action.payload; 
+                } else {
+                    state.burgerIngredients.push(action.payload); 
+                }
+            },
+            prepare: (ingredient: Ingredient) => {
+                if (ingredient.type === 'bun') {
+                    return { payload: ingredient }; 
+                }
+                return { payload: { ...ingredient, uniqueId: nanoid() } }; 
             }
         },
         removeIngredient: (state, action: PayloadAction<string>) => {
@@ -46,5 +54,5 @@ const BurgerConstructorSlice = createSlice({
     },
 });
 
-export const { addIngredient, removeIngredient, moveIngredient } = BurgerConstructorSlice.actions;
+export const { addIngredient, removeIngredient, moveIngredient, clearConstructor } = BurgerConstructorSlice.actions;
 export default BurgerConstructorSlice.reducer;

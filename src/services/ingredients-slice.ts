@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { Ingredient, IngredientsState } from '../utils/types';
 import { API_URL } from '../utils/constants';
+import { request } from '../utils/apiUtils';
 
 const initialState: IngredientsState = {
     ingredients: [],
@@ -12,12 +13,8 @@ export const fetchIngredients = createAsyncThunk(
     'ingredients/fetchIngredients',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(API_URL);
-            if (!response.ok) {
-                throw new Error('Failed to fetch ingredients');
-            }
-            const data = await response.json();
-            return data.data as Ingredient[];
+            const data = await request<{ data: Ingredient[] }>(API_URL, {}); 
+            return data.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }

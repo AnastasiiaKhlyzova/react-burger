@@ -8,7 +8,7 @@ import OrderDetails from '../order-details/order-details';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../services/store';
 import { placeOrder, clearOrder } from '../../services/order-slice';
-import { addIngredient, removeIngredient, moveIngredient } from '../../services/burger-constructor-slice';
+import { addIngredient, removeIngredient, moveIngredient, clearConstructor } from '../../services/burger-constructor-slice';
 import { decrementIngredientCount } from '../../services/ingredients-slice';
 import { Ingredient } from '../../utils/types';
 
@@ -43,6 +43,7 @@ const BurgerConstructor: React.FC = () => {
         const ingredientIds = [...burgerIngredients.map(item => item._id)];
         if (bun) ingredientIds.push(bun._id, bun._id);
         dispatch(placeOrder(ingredientIds)).then(() => setModalOpen(true));
+        dispatch(clearConstructor());
     };
 
     const handleCloseModal = () => {
@@ -84,7 +85,7 @@ const BurgerConstructor: React.FC = () => {
                     <span className="text text_type_digits-medium">{totalPrice}</span>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button type="primary" size="medium" htmlType="button" onClick={handleOpenModal}>
+                <Button type="primary" size="medium" htmlType="button" onClick={handleOpenModal} disabled={!bun}>
                     Оформить заказ
                 </Button>
             </div>
