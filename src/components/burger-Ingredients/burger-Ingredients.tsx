@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientItem from './ingredient-item/ingredient-item';
 import styles from './burger-ingredients.module.css';
@@ -13,6 +14,8 @@ import { setCurrentIngredient, clearCurrentIngredient } from '../../services/cur
 
 const BurgerIngredients: React.FC = () => {
   const [current, setCurrent] = useState('Булки');
+  const navigate = useNavigate();
+  const location = useLocation();
   
 
   const dispatch = useDispatch<AppDispatch>();
@@ -30,7 +33,8 @@ const BurgerIngredients: React.FC = () => {
 
   const handleIngredientClick = (ingredient: Ingredient) => {
     dispatch(setCurrentIngredient(ingredient));
-  };
+    navigate(`/ingredients/${ingredient._id}`, { state: { backgroundLocation: location } });
+  }
 
   const closeModal = () => {
     dispatch(clearCurrentIngredient());

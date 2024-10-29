@@ -1,26 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ErrorResponse, OrderResponse, OrderState } from '../utils/types';
 import { ORDER_URL } from '../utils/constants';
-import { request } from '../utils/apiUtils';
+import { authRequest} from '../utils/apiUtils';
 
 export const placeOrder = createAsyncThunk<OrderResponse, string[], { rejectValue: ErrorResponse }>(
   'order/placeOrder',
-  async (ingredientIds: string[], { rejectWithValue }) => {
+  async (ingredientIds, { rejectWithValue }) => {
     try {
-        const data = await request<OrderResponse>(ORDER_URL, {
+        const data = await authRequest<OrderResponse>(ORDER_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ ingredients: ingredientIds }),
-          });
-          return data;
+        });
+        return data;
     } catch (error) {
       return rejectWithValue({ message: 'Ошибка сети' });
     }
   }
 );
-
 const initialState: OrderState = {
   order: null,
   status: 'idle',

@@ -1,0 +1,6 @@
+.content {
+    display: flex;
+    width:1240px;
+    margin-top: 20px;
+    gap: 40px;
+  }

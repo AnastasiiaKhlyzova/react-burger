@@ -7,6 +7,7 @@ const initialState: IngredientsState = {
     ingredients: [],
     status: 'idle',
     error: null,
+    currentIngredient: null,
 };
 
 export const fetchIngredients = createAsyncThunk(
@@ -21,12 +22,20 @@ export const fetchIngredients = createAsyncThunk(
     }
 );
 
+
+
 const ingredientsSlice = createSlice({
     name: 'ingredients',
     initialState,
     reducers: {
         setIngredients: (state, action: PayloadAction<Ingredient[]>) => {
             state.ingredients = action.payload;
+        },
+        setCurrentIngredient: (state, action: PayloadAction<Ingredient>) => {
+            state.currentIngredient = action.payload;
+        },
+        clearCurrentIngredient: (state) => {
+            state.currentIngredient = null;
         },
         incrementIngredientCount: (state, action: PayloadAction<string>) => {
             const ingredient = state.ingredients.find(i => i._id === action.payload);
@@ -58,5 +67,5 @@ const ingredientsSlice = createSlice({
     },
 });
 
-export const { setIngredients, incrementIngredientCount, decrementIngredientCount } = ingredientsSlice.actions;
+export const { setIngredients, setCurrentIngredient, clearCurrentIngredient, incrementIngredientCount, decrementIngredientCount } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

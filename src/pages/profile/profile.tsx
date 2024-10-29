@@ -1,0 +1,139 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import styles from './profile.module.css';
+import { AppDispatch, RootState } from '../../services/store';
+import { logoutUser,  updateUser } from '../../services/auth-slice';
+import { User } from '../../utils/types';
+
+const ProfilePage: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.auth.user) as User;
+
+  
+
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (user) { 
+        setName(user.name);
+        setEmail(user.email);
+      }
+
+  }, [dispatch, user]);
+
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
+
+  const handleLogout = () => {
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => navigate('/login'))
+      .catch(console.error);
+  };
+
+  const handleSave = () => {
+    dispatch(updateUser({ name, email, password }))
+      .unwrap()
+      .then(() => {
+        setPassword(''); 
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении данных пользователя:', error);
+      });
+  };
+
+  const handleCancel = () => {
+    setName(user?.name || '');
+    setEmail(user?.email || '');
+    setPassword(''); 
+  };
+
+    return (
+        <div className={`${styles.wrapper} mt-20`}>
+            <nav className={styles.navigation}>
+                <NavLink
+                    to="/profile"
+                    end
+                    className={({ isActive }) =>
+                        `${styles.link} text text_type_main-medium ${isActive ? 'text_color_primary' : 'text_color_inactive'}`
+                    }
+                >
+                    Профиль
+                </NavLink>
+                <NavLink
+                    to="/profile/orders"
+                    className={({ isActive }) =>
+                        `${styles.link} text text_type_main-medium ${isActive ? 'text_color_primary' : 'text_color_inactive'}`
+                    }
+                >
+                    История заказов
+                </NavLink>
+                <NavLink
+                    to="/logout"
+                    className={({ isActive }) =>
+                        `${styles.link} text text_type_main-medium ${isActive ? 'text_color_primary' : 'text_color_inactive'}`
+                    }
+                    onClick={(e) => {
+                        e.preventDefault(); 
+                        handleLogout(); 
+                    }}
+                >
+                    Выход
+                </NavLink>
+                <p className='text text_type_main-default text_color_inactive mt-20'>
+                    В этом разделе вы можете изменить свои персональные данные
+                </p>
+            </nav>
+            <div className={styles.content}>
+            <div className={styles.form}>
+                <Input 
+                    type="text"
+                    placeholder="Имя"
+                    onChange={onNameChange}
+                    value={name}
+                    name="name" 
+                    onPointerEnterCapture={undefined} 
+                    onPointerLeaveCapture={undefined}    
+                    icon="EditIcon"            
+                     />
+                <Input 
+                    type="email"
+                    placeholder="Логин"
+                    onChange={onEmailChange}
+                    value={email}
+                    name="email" 
+                    onPointerEnterCapture={undefined} 
+                    onPointerLeaveCapture={undefined}
+                    icon="EditIcon"                
+                    />
+                <PasswordInput 
+                    onChange={onPasswordChange}
+                    value={password}
+                    name="password"
+                 
+                />
+            </div>
+
+            <div className={styles.buttons}>
+                <Button type="primary" onClick={handleSave} htmlType={'submit'}>
+                    Сохранить
+                </Button>
+                <Button type="secondary" onClick={handleCancel} htmlType={'submit'}>
+                    Отмена
+                </Button>
+            </div>
+            </div>
+            
+
+            <Outlet />
+        </div>
+    );
+};
+
+export default ProfilePage;
