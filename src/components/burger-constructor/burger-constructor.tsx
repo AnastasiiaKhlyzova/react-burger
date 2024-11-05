@@ -11,14 +11,16 @@ import { placeOrder, clearOrder } from '../../services/order-slice';
 import { addIngredient, removeIngredient, moveIngredient, clearConstructor } from '../../services/burger-constructor-slice';
 import { decrementIngredientCount } from '../../services/ingredients-slice';
 import { Ingredient } from '../../utils/types';
-
+import { useNavigate } from 'react-router-dom';
+import { getAccessToken } from '../../utils/auth-tokens';
 
 const BurgerConstructor: React.FC = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
     const { bun, burgerIngredients } = useSelector((state: RootState) => state.burgerConstructor);
-  
+    const token = getAccessToken()
 
     const moveIngredientHandler = useCallback((dragIndex: number, hoverIndex: number) => {
         dispatch(moveIngredient({ dragIndex, hoverIndex }));
@@ -27,9 +29,7 @@ const BurgerConstructor: React.FC = () => {
     const [{ isOver }, dropRef] = useDrop({
         accept: 'ingredient',
         drop: (item: Ingredient & { uniqueId?: string }) => {
-          
             const isAlreadyInConstructor = item.uniqueId !== undefined;
-
             if (!isAlreadyInConstructor) {
                 dispatch(addIngredient(item)); 
             }
@@ -40,15 +40,25 @@ const BurgerConstructor: React.FC = () => {
     });
 
     const handleOpenModal = () => {
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+    
         const ingredientIds = [...burgerIngredients.map(item => item._id)];
         if (bun) ingredientIds.push(bun._id, bun._id);
-        dispatch(placeOrder(ingredientIds)).then(() => setModalOpen(true));
-        dispatch(clearConstructor());
+
+    
+        dispatch(placeOrder(ingredientIds))
+            .unwrap()
+            .then(() => setModalOpen(true))
+            .catch(error => console.error("Ошибка при оформлении заказа:", error));
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
         dispatch(clearOrder());
+        dispatch(clearConstructor());
     };
 
     const handleRemoveIngredient = (uniqueId: string | undefined, _id: string) => {

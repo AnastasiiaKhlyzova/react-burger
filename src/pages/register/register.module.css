@@ -1,0 +1,13 @@
+.wrapper {
+    gap: 24px;
+}
+
+.form {
+    gap: 24px;
+}
+
+.wrapper, .bottomLinks, .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

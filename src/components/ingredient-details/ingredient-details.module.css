@@ -4,8 +4,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    background-color: #1c1c21;
     border-radius: 8px;
+}
+
+.withBackground {
+    background-color: #1c1c21;
 }
 
 .image {

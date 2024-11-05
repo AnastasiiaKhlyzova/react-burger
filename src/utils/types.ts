@@ -18,6 +18,7 @@ export interface IngredientsState {
     ingredients: Ingredient[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
+    currentIngredient?:  Ingredient | null;
   }
   
 export interface BurgerConstructorState {
@@ -51,3 +52,25 @@ export interface OrderResponse {
 export interface ErrorResponse {
     message: string;
   }
+
+  export interface User {
+    email: string;
+    name: string;
+  }
+  
+
+  export interface UserResponse {
+    success: boolean;
+    user: User;
+    accessToken: string;
+    refreshToken: string;
+  }
+  
+  export interface UserData {
+    email: string;
+    password: string;
+    name?: string; 
+  }
+  
+ 
+  

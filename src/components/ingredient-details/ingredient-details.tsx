@@ -5,9 +5,10 @@ import { Ingredient } from '../../utils/types';
 
 interface IngredientDetailsProps {
     ingredient: Ingredient;
+    className?: string
 }
 
-const IngredientDetails: React.FC<IngredientDetailsProps> = ({ ingredient }) => {
+const IngredientDetails: React.FC<IngredientDetailsProps> = ({ ingredient, className }) => {
     return (
         <div className={styles.container}>
             <img src={ingredient.image_large} alt={ingredient.name} className={styles.image} />
