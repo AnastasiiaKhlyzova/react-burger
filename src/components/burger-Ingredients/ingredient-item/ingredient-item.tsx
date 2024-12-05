@@ -1,18 +1,19 @@
 import React, { useMemo } from 'react';
-import { RootState, AppDispatch } from '../../../services/store';
+import { RootState } from '../../../services/store';
 import { useDrag } from 'react-dnd';
 import styles from './ingredient-item.module.css';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Ingredient } from '../../../utils/types';
-import { useSelector, useDispatch } from 'react-redux';
+
 import { incrementIngredientCount } from '../../../services/ingredients-slice';
+import { useAppDispatch, useAppSelector } from '../../../services/hooks';
 
 interface IngredientItemProps {
     item: Ingredient; 
 }
 
 const IngredientItem: React.FC<IngredientItemProps> = ({ item }) => {
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useAppDispatch();
 
     const [, dragRef] = useDrag(() => ({
         type: 'ingredient',
@@ -25,7 +26,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ item }) => {
     }));
 
 
-    const { bun, burgerIngredients } = useSelector((state: RootState) => state.burgerConstructor);
+    const { bun, burgerIngredients } = useAppSelector((state: RootState) => state.burgerConstructor);
 
 
     const count = useMemo(() => {

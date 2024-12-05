@@ -1,19 +1,18 @@
 import React from 'react';
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
-
 import styles from './login.module.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { loginUser } from '../../services/auth-slice';
 import { AppDispatch, RootState } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
 
 const LoginPage: React.FC = () => { 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const dispatch: AppDispatch = useDispatch();
+    const dispatch: AppDispatch = useAppDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const { status, error } = useSelector((state: RootState) => state.auth); 
+    const { status, error } = useAppSelector((state: RootState) => state.auth); 
 
     const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);

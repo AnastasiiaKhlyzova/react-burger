@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
+
 import AppHeader from '../app-header/app-header';
 
 import styles from './app.module.css';
@@ -16,24 +17,25 @@ import OrdersHistoryPage from '../../pages/profile/order-history';
 import OrderDetailsPage from '../../pages/profile/order-details';
 import ProtectedRouteLogin from '../protected-routes/protected-route-for-login';
 import ProtectedRouteElement from '../protected-routes/protected-route';
-import { RootState, AppDispatch } from '../../services/store';
+import { RootState } from '../../services/store';
 import IngredientPage from '../../pages/ingredient/ingredient';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { fetchIngredients, setCurrentIngredient } from '../../services/ingredients-slice';
+import FeedPage from '../../pages/feed/feed';
+import FeedDetailsPage from '../../pages/feed/feed-details';
 
 function App() {
   const location = useLocation();
-  const backgroundLocation = location.state?.backgroundLocation;
+  const backgroundLocation = location.state?.backgroundLocation || location;
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch()
 
-  const { ingredients, status } = useSelector((state: RootState) => state.ingredients);
-  const currentIngredient = useSelector((state: RootState) => state.ingredients.currentIngredient);
-  const passwordResetRequested = useSelector((state: RootState) => state.auth.passwordResetRequested);
+  const { ingredients, status } = useAppSelector((state: RootState) => state.ingredients);
+  const currentIngredient = useAppSelector((state: RootState) => state.ingredients.currentIngredient);
+  const passwordResetRequested = useAppSelector((state: RootState) => state.auth.passwordResetRequested);
 
-  const shouldFetchIngridient = status === 'idle'
-
+  const shouldFetchIngridient = status === 'idle';
 
   useEffect(() => {
     if (shouldFetchIngridient) {
@@ -56,7 +58,7 @@ function App() {
       <div className={styles.wrapper}>
         <AppHeader />
         <main>
-          <Routes location={backgroundLocation || location}>
+          <Routes location={backgroundLocation}>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<ProtectedRouteLogin element={<LoginPage />} />} />
             <Route path="/register" element={<ProtectedRouteLogin element={<RegisterPage />} />} />
@@ -67,15 +69,44 @@ function App() {
             />
             <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />} />}>
               <Route path="orders" element={<OrdersHistoryPage />} />
-              <Route path="orders/:id" element={<OrderDetailsPage />} />
+           
             </Route>
+            <Route path="/profile/orders/:id" element={<ProtectedRouteElement element={<OrderDetailsPage className={styles.feedDetailsPage}/>} />} /> 
+        
             <Route path="/ingredients/:id" element={<IngredientPage />} />
+            <Route path="/feed" element={<FeedPage />} />
+            <Route path="/feed/:id" element={
+                <FeedDetailsPage className={styles.feedDetailsPage}/>
+              } />
           </Routes>
 
-          {backgroundLocation && (
-            <Modal title="Детали ингредиента" onClose={() => navigate(-1)}>
-              {currentIngredient ? <IngredientDetails ingredient={currentIngredient} className="withBackground" /> : <p>Загрузка...</p>}
-            </Modal>
+          {backgroundLocation !== location && (
+            <Routes>
+              <Route
+                path="/ingredients/:id"
+                element={
+                  <Modal  onClose={() => navigate(-1)}>
+                    {currentIngredient ? <IngredientDetails ingredient={currentIngredient} /> : <p>Загрузка...</p>}
+                  </Modal>
+                }
+              />
+              <Route
+                path="/feed/:id"
+                element={
+                  <Modal onClose={() => navigate(-1)}>
+                    <FeedDetailsPage />
+                  </Modal>
+                }
+              />
+              <Route
+                path="/profile/orders/:id"
+                element={
+                  <Modal  onClose={() => navigate(-1)}>
+                    <OrderDetailsPage />
+                  </Modal>
+                }
+              />
+            </Routes>
           )}
         </main>
       </div>

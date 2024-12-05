@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ErrorResponse, OrderResponse, OrderState } from '../utils/types';
+import { ErrorResponse, FetchOrderResponse, OrderResponse, OrderState } from '../utils/types';
 import { ORDER_URL } from '../utils/constants';
 import { authRequest} from '../utils/apiUtils';
 
@@ -20,6 +20,26 @@ export const placeOrder = createAsyncThunk<OrderResponse, string[], { rejectValu
     }
   }
 );
+
+export const getOrder = createAsyncThunk<FetchOrderResponse, string, { rejectValue: ErrorResponse }>(
+  'order/getOrder',
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const data = await authRequest<FetchOrderResponse>(`${ORDER_URL}/${orderId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue({ message: 'Ошибка сети' });
+    }
+  }
+);
+
+
+
 const initialState: OrderState = {
   order: null,
   status: 'idle',
@@ -32,7 +52,6 @@ const orderSlice = createSlice({
   initialState,
   reducers: {
     clearOrder: (state) => {
-      state.order = null;
       state.status = 'idle';
       state.error = null;
     },
@@ -47,6 +66,17 @@ const orderSlice = createSlice({
         state.status = 'succeeded';
       })
       .addCase(placeOrder.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message ?? 'Неизвестная ошибка';
+      })
+      .addCase(getOrder.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getOrder.fulfilled, (state, action: PayloadAction<FetchOrderResponse>) => {
+        state.order = action.payload.orders[0];
+        state.status = 'succeeded';
+      })
+      .addCase(getOrder.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload?.message ?? 'Неизвестная ошибка';
       });

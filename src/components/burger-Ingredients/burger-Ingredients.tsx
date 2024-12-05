@@ -5,8 +5,8 @@ import IngredientItem from './ingredient-item/ingredient-item';
 import styles from './burger-ingredients.module.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
+import { RootState } from '../../services/store';
 import { Ingredient } from '../../utils/types';
 import { fetchIngredients } from '../../services/ingredients-slice';
 import { setCurrentIngredient, clearCurrentIngredient } from '../../services/current-ingredient-slice'; 
@@ -18,9 +18,9 @@ const BurgerIngredients: React.FC = () => {
   const location = useLocation();
   
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { ingredients, status, error } = useSelector((state: RootState) => state.ingredients);
-  const currentIngredient = useSelector((state: RootState) => state.currentIngredient.currentIngredient);
+  const dispatch = useAppDispatch();
+  const { ingredients, status, error } = useAppSelector((state: RootState) => state.ingredients);
+  const currentIngredient = useAppSelector((state: RootState) => state.currentIngredient.currentIngredient);
 
   const bunsRef = useRef<HTMLHeadingElement>(null);
   const saucesRef = useRef<HTMLHeadingElement>(null);

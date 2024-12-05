@@ -5,21 +5,22 @@ import styles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../../services/store';
+
+import { RootState,  } from '../../services/store';
 import { placeOrder, clearOrder } from '../../services/order-slice';
 import { addIngredient, removeIngredient, moveIngredient, clearConstructor } from '../../services/burger-constructor-slice';
 import { decrementIngredientCount } from '../../services/ingredients-slice';
 import { Ingredient } from '../../utils/types';
 import { useNavigate } from 'react-router-dom';
 import { getAccessToken } from '../../utils/auth-tokens';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
 
 const BurgerConstructor: React.FC = () => {
     const [isModalOpen, setModalOpen] = useState(false);
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useAppDispatch()
     const navigate = useNavigate();
 
-    const { bun, burgerIngredients } = useSelector((state: RootState) => state.burgerConstructor);
+    const { bun, burgerIngredients } = useAppSelector((state: RootState) => state.burgerConstructor);
     const token = getAccessToken()
 
     const moveIngredientHandler = useCallback((dragIndex: number, hoverIndex: number) => {
@@ -46,7 +47,10 @@ const BurgerConstructor: React.FC = () => {
         }
     
         const ingredientIds = [...burgerIngredients.map(item => item._id)];
-        if (bun) ingredientIds.push(bun._id, bun._id);
+        if (bun) {
+            ingredientIds.push(bun._id)
+            ingredientIds.unshift(bun._id)
+        };
 
     
         dispatch(placeOrder(ingredientIds))

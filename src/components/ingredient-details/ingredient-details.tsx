@@ -11,6 +11,7 @@ interface IngredientDetailsProps {
 const IngredientDetails: React.FC<IngredientDetailsProps> = ({ ingredient, className }) => {
     return (
         <div className={styles.container}>
+            <h1>Детали ингредиента</h1>
             <img src={ingredient.image_large} alt={ingredient.name} className={styles.image} />
 
        

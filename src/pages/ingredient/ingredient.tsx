@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {  useAppSelector } from '../../services/hooks';
 import { RootState } from '../../services/store';
 import IngredientDetails from '../../components/ingredient-details/ingredient-details';
 import styles from './ingredient.module.css';
@@ -8,7 +8,7 @@ import styles from './ingredient.module.css';
 
 const IngredientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const ingredient = useSelector((state: RootState) => 
+  const ingredient = useAppSelector((state: RootState) => 
     state.ingredients.ingredients.find((item) => item._id === id)
   );
 
