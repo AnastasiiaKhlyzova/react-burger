@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useAppDispatch, useAppSelector } from '../../services/hooks';
@@ -21,32 +27,40 @@ import { RootState } from '../../services/store';
 import IngredientPage from '../../pages/ingredient/ingredient';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import { fetchIngredients, setCurrentIngredient } from '../../services/ingredients-slice';
-import FeedPage from '../../pages/feed/feed';
+import {
+  fetchIngredients,
+  setCurrentIngredient,
+} from '../../services/ingredients-slice';
+
 import FeedDetailsPage from '../../pages/feed/feed-details';
+import FeedPage from '../../pages/feed/feed';
 
 function App() {
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation || location;
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const { ingredients, status } = useAppSelector((state: RootState) => state.ingredients);
-  const currentIngredient = useAppSelector((state: RootState) => state.ingredients.currentIngredient);
-  const passwordResetRequested = useAppSelector((state: RootState) => state.auth.passwordResetRequested);
+  const { ingredients, status } = useAppSelector((state) => state.ingredients);
+  const currentIngredient = useAppSelector(
+    (state) => state.ingredients.currentIngredient,
+  );
+  const passwordResetRequested = useAppSelector(
+    (state) => state.auth.passwordResetRequested,
+  );
 
-  const shouldFetchIngridient = status === 'idle';
+  const shouldFetchIngredient = status === 'idle';
 
   useEffect(() => {
-    if (shouldFetchIngridient) {
+    if (shouldFetchIngredient) {
       dispatch(fetchIngredients());
     }
-  }, [dispatch, shouldFetchIngridient, status]);
+  }, [shouldFetchIngredient, dispatch]);
 
   useEffect(() => {
     const ingredientId = location.pathname.match(/\/ingredients\/(\w+)/)?.[1];
     if (ingredientId && ingredients.length > 0) {
-      const ingredient = ingredients.find(item => item._id === ingredientId);
+      const ingredient = ingredients.find((item) => item._id === ingredientId);
       if (ingredient) {
         dispatch(setCurrentIngredient(ingredient));
       }
@@ -60,24 +74,51 @@ function App() {
         <main>
           <Routes location={backgroundLocation}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<ProtectedRouteLogin element={<LoginPage />} />} />
-            <Route path="/register" element={<ProtectedRouteLogin element={<RegisterPage />} />} />
-            <Route path="/forgot-password" element={<ProtectedRouteLogin element={<ForgotPasswordPage />} />} />
+            <Route
+              path="/login"
+              element={<ProtectedRouteLogin element={<LoginPage />} />}
+            />
+            <Route
+              path="/register"
+              element={<ProtectedRouteLogin element={<RegisterPage />} />}
+            />
+            <Route
+              path="/forgot-password"
+              element={<ProtectedRouteLogin element={<ForgotPasswordPage />} />}
+            />
             <Route
               path="/reset-password"
-              element={passwordResetRequested ? <ProtectedRouteLogin element={<ResetPasswordPage />} /> : <Navigate to="/forgot-password" replace />}
+              element={
+                passwordResetRequested ? (
+                  <ProtectedRouteLogin element={<ResetPasswordPage />} />
+                ) : (
+                  <Navigate to="/forgot-password" replace />
+                )
+              }
             />
-            <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />} />}>
+            <Route
+              path="/profile"
+              element={<ProtectedRouteElement element={<ProfilePage />} />}
+            >
               <Route path="orders" element={<OrdersHistoryPage />} />
-           
             </Route>
-            <Route path="/profile/orders/:id" element={<ProtectedRouteElement element={<OrderDetailsPage className={styles.feedDetailsPage}/>} />} /> 
-        
+            <Route
+              path="/profile/orders/:id"
+              element={
+                <ProtectedRouteElement
+                  element={
+                    <OrderDetailsPage className={styles.feedDetailsPage} />
+                  }
+                />
+              }
+            />
+
             <Route path="/ingredients/:id" element={<IngredientPage />} />
             <Route path="/feed" element={<FeedPage />} />
-            <Route path="/feed/:id" element={
-                <FeedDetailsPage className={styles.feedDetailsPage}/>
-              } />
+            <Route
+              path="/feed/:id"
+              element={<FeedDetailsPage className={styles.feedDetailsPage} />}
+            />
           </Routes>
 
           {backgroundLocation !== location && (
@@ -85,8 +126,12 @@ function App() {
               <Route
                 path="/ingredients/:id"
                 element={
-                  <Modal  onClose={() => navigate(-1)}>
-                    {currentIngredient ? <IngredientDetails ingredient={currentIngredient} /> : <p>Загрузка...</p>}
+                  <Modal onClose={() => navigate(-1)}>
+                    {currentIngredient ? (
+                      <IngredientDetails ingredient={currentIngredient} />
+                    ) : (
+                      <p>Загрузка...</p>
+                    )}
                   </Modal>
                 }
               />
@@ -101,7 +146,7 @@ function App() {
               <Route
                 path="/profile/orders/:id"
                 element={
-                  <Modal  onClose={() => navigate(-1)}>
+                  <Modal onClose={() => navigate(-1)}>
                     <OrderDetailsPage />
                   </Modal>
                 }

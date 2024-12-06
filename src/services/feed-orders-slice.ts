@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Order } from '../utils/types';
 
-
 export interface FeedOrdersState {
   orders: Order[];
   total: number;
@@ -24,10 +23,11 @@ const FeedOrdersSlice = createSlice({
       state.totalToday = action.payload.totalToday;
     },
     connect() {},
+    disconnect() {},
   },
 });
 
-export const { setOrders, connect } = FeedOrdersSlice.actions;
+export const { setOrders, connect, disconnect } = FeedOrdersSlice.actions;
 
 export type SetOrdersFull = typeof setOrders;
 

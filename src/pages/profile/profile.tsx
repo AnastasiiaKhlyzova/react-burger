@@ -15,7 +15,7 @@ const ProfilePage: React.FC = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useAppSelector((state: RootState) => state.auth.user) as User;
+  const user = useAppSelector((state) => state.auth.user) as User;
 
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');

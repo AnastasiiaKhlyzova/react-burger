@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import cn from 'clsx';
 import { useAppDispatch, useAppSelector } from '../../services/hooks';
-import { RootState } from '../../services/store';
-import OrderHistoryIngredientItem from '../../components/order-history-ingredient-item/order-history-ingredient-item';
 import { getOrder } from '../../services/order-slice';
 import styles from './order-details.module.css';
 import {
@@ -11,14 +9,13 @@ import {
   FormattedDate,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Ingredient } from '../../utils/types';
+import OrderHistoryIngredientItem from '../../components/order-history-ingredient-item/order-history-ingredient-item';
 
 const OrderDetailsPage = ({ className }: { className?: string }) => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const order = useAppSelector((state: RootState) => state.order.order);
-  const ingredients = useAppSelector(
-    (state: RootState) => state.ingredients.ingredients,
-  );
+  const order = useAppSelector((state) => state.order.order);
+  const ingredients = useAppSelector((state) => state.ingredients.ingredients);
 
   useEffect(() => {
     if (id) {
@@ -27,24 +24,28 @@ const OrderDetailsPage = ({ className }: { className?: string }) => {
   }, [id, dispatch]);
 
   if (!order) {
-    return <div>Заказ не найден</div>;
+    return <div>Заказ не найден. Выполните вход в аккаунт</div>;
   }
 
-  const getIngredientDetails = (ingredientIds: string[]): Ingredient[] => {
-    return ingredientIds
-      .map((id) => ingredients.find((ingredient) => ingredient._id === id))
-      .filter(Boolean) as Ingredient[];
-  };
+  const ingredientMap = order.ingredients.reduce((map, id) => {
+    const ingredient = ingredients.find((ingredient) => ingredient._id === id);
+    if (ingredient) {
+      if (map.has(id)) {
+        map.get(id)!.quantity += 1;
+      } else {
+        map.set(id, { ingredient, quantity: 1 });
+      }
+    }
+    return map;
+  }, new Map<string, { ingredient: Ingredient; quantity: number }>());
 
-  const ingredientDetails = getIngredientDetails(order.ingredients);
-
-  const totalPrice = ingredientDetails.reduce((total, ingredient) => {
-    const quantity = order.ingredients.filter(
-      (id: string) => id === ingredient._id,
-    ).length;
-    const isBun = ingredient.type === 'bun';
-    return total + ingredient.price * (isBun ? 1 : quantity);
-  }, 0);
+  const totalPrice = Array.from(ingredientMap.values()).reduce(
+    (total, { ingredient, quantity }) => {
+      const isBun = ingredient.type === 'bun';
+      return total + ingredient.price * (isBun ? 2 : quantity);
+    },
+    0,
+  );
 
   const statusText =
     {
@@ -70,18 +71,12 @@ const OrderDetailsPage = ({ className }: { className?: string }) => {
 
       <h3>Состав:</h3>
       <div className={styles.ingredients}>
-        {ingredientDetails.map((ingredient) => (
+        {Array.from(ingredientMap.values()).map(({ ingredient, quantity }) => (
           <OrderHistoryIngredientItem
             key={ingredient._id}
             image={ingredient.image}
             name={ingredient.name}
-            quantity={
-              ingredient.type === 'bun'
-                ? 1
-                : order.ingredients.filter(
-                    (id: string) => id === ingredient._id,
-                  ).length
-            }
+            quantity={ingredient.type === 'bun' ? 2 : quantity}
             price={ingredient.price}
           />
         ))}

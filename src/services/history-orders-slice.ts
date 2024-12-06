@@ -17,10 +17,11 @@ const HistoryOrdersSlice = createSlice({
       state.orders = action.payload.orders;
     },
     connect() {},
+    disconnect() {},
   },
 });
 
-export const { setOrders, connect } = HistoryOrdersSlice.actions;
+export const { setOrders, connect, disconnect } = HistoryOrdersSlice.actions;
 
 export type SetOrdersPersonal = typeof setOrders;
 

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import OrderHistoryItem from '../../components/order-history-item/order-history-item';
 import styles from './feed.module.css';
 import { RootState } from '../../services/store';
-import { connect } from '../../services/feed-orders-slice';
+import { connect, disconnect } from '../../services/feed-orders-slice';
 import { fetchIngredients } from '../../services/ingredients-slice';
 import { Ingredient, Order } from '../../utils/types';
 import { Status } from '../../utils/statusEnum';
@@ -17,14 +17,17 @@ const FeedPage: React.FC = () => {
     orders = [],
     total,
     totalToday,
-  } = useAppSelector((state: RootState) => state.feedOrders);
+  } = useAppSelector((state) => state.feedOrders);
   const { ingredients, status, error } = useAppSelector(
-    (state: RootState) => state.ingredients,
+    (state) => state.ingredients,
   );
 
   useEffect(() => {
     dispatch(connect());
-    dispatch(fetchIngredients());
+
+    return () => {
+      dispatch(disconnect());
+    };
   }, [dispatch]);
 
   const handleOrderClick = (order: Order) => {
@@ -42,7 +45,7 @@ const FeedPage: React.FC = () => {
   if (status === Status.Loading) {
     return <div>Loading...</div>;
   }
-  
+
   if (status === Status.Failed) {
     return <div>Error: {error}</div>;
   }

@@ -15,10 +15,8 @@ import {
 const FeedDetailsPage = ({ className }: { className?: string }) => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const order = useAppSelector((state: RootState) => state.order.order);
-  const ingredients = useAppSelector(
-    (state: RootState) => state.ingredients.ingredients,
-  );
+  const order = useAppSelector((state) => state.order.order);
+  const ingredients = useAppSelector((state) => state.ingredients.ingredients);
 
   useEffect(() => {
     if (id) {
@@ -27,24 +25,25 @@ const FeedDetailsPage = ({ className }: { className?: string }) => {
   }, [id, dispatch]);
 
   if (!order) {
-    return <div>Заказ не найден</div>;
+    return <div>Заказ не найден. Выполните вход в аккаунт</div>;
   }
 
-  const getIngredientDetails = (ingredientIds: string[]): Ingredient[] => {
-    return ingredientIds
-      .map((id) => ingredients.find((ingredient) => ingredient._id === id))
-      .filter(Boolean) as Ingredient[];
-  };
+  const ingredientMap = order.ingredients.reduce((map, id) => {
+    const ingredient = ingredients.find((ingredient) => ingredient._id === id);
+    if (ingredient) {
+      if (map.has(id)) {
+        map.get(id)!.quantity += 1;
+      } else {
+        map.set(id, { ingredient, quantity: 1 });
+      }
+    }
+    return map;
+  }, new Map<string, { ingredient: Ingredient; quantity: number }>());
 
-  const ingredientDetails = getIngredientDetails(order.ingredients);
-
-  const totalPrice = ingredientDetails.reduce((total, ingredient) => {
-    const quantity = order.ingredients.filter(
-      (id: string) => id === ingredient._id,
-    ).length;
-    const isBun = ingredient.type === 'bun';
-    return total + ingredient.price * (isBun ? 1 : quantity);
-  }, 0);
+  const totalPrice = Array.from(ingredientMap.values()).reduce(
+    (total, { ingredient, quantity }) => total + ingredient.price * quantity,
+    0,
+  );
 
   return (
     <div className={cn(styles.wrapper, className)}>
@@ -54,18 +53,12 @@ const FeedDetailsPage = ({ className }: { className?: string }) => {
       </div>
       <h3>Состав:</h3>
       <div className={styles.ingredients}>
-        {ingredientDetails.map((ingredient: Ingredient) => (
+        {Array.from(ingredientMap.values()).map(({ ingredient, quantity }) => (
           <OrderHistoryIngredientItem
             key={ingredient._id}
             image={ingredient.image}
             name={ingredient.name}
-            quantity={
-              ingredient.type === 'bun'
-                ? 1
-                : order.ingredients.filter(
-                    (id: string) => id === ingredient._id,
-                  ).length
-            }
+            quantity={quantity}
             price={ingredient.price}
           />
         ))}

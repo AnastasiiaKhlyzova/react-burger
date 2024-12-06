@@ -5,11 +5,15 @@ import { RootState, AppDispatch } from '../../services/store';
 import { getUser } from '../../services/auth-slice';
 import { useAppDispatch, useAppSelector } from '../../services/hooks';
 
-
-const ProtectedRouteElement: React.FC<{ element: JSX.Element; redirectTo?: string }> = ({ element, redirectTo = '/login' }) => {
+const ProtectedRouteElement: React.FC<{
+  element: JSX.Element;
+  redirectTo?: string;
+}> = ({ element, redirectTo = '/login' }) => {
   const location = useLocation();
   const dispatch: AppDispatch = useAppDispatch();
-  const { isAuthenticated, isUserLoading } = useAppSelector((state: RootState) => state.auth);
+  const { isAuthenticated, isUserLoading } = useAppSelector(
+    (state) => state.auth,
+  );
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -18,9 +22,8 @@ const ProtectedRouteElement: React.FC<{ element: JSX.Element; redirectTo?: strin
   }, [dispatch, isAuthenticated]);
 
   if (isUserLoading) {
-    return <div>Загрузка данных</div>; 
+    return <div>Загрузка данных</div>;
   }
-
 
   return isAuthenticated ? (
     element

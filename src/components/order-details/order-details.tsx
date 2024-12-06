@@ -5,7 +5,7 @@ import { useAppSelector } from '../../services/hooks';
 import { RootState } from '../../services/store';
 
 const OrderDetails: React.FC = () => {
-  const { order, status } = useAppSelector((state: RootState) => state.order);
+  const { order, status } = useAppSelector((state) => state.order);
 
   if (status === 'loading') {
     return <p>Оформление заказа...</p>;
