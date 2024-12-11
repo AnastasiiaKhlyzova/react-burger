@@ -73,7 +73,7 @@ function App() {
         <AppHeader />
         <main>
           <Routes location={backgroundLocation}>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/react-burger" element={<HomePage />} />
             <Route
               path="/login"
               element={<ProtectedRouteLogin element={<LoginPage />} />}

@@ -38,7 +38,7 @@
 
 ## Деплой
 
-Проект задеплоен на GitHub Pages: https://anastasiia171.github.io
+Проект задеплоен на GitHub Pages: https://anastasiia171.github.io/react-burger
 
 ## Технологии
 
