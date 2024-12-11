@@ -6,7 +6,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './login.module.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { loginUser } from '../../services/auth-slice';
+import { loginUser } from '../../services/auth/auth-slice';
 import { AppDispatch, RootState } from '../../services/store';
 import { useAppDispatch, useAppSelector } from '../../services/hooks';
 

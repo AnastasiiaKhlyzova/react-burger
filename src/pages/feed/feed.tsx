@@ -4,8 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import OrderHistoryItem from '../../components/order-history-item/order-history-item';
 import styles from './feed.module.css';
 import { RootState } from '../../services/store';
-import { connect, disconnect } from '../../services/feed-orders-slice';
-import { fetchIngredients } from '../../services/ingredients-slice';
+import {
+  connect,
+  disconnect,
+} from '../../services/feed-orders/feed-orders-slice';
+import { fetchIngredients } from '../../services/ingredients-slice/ingredients-slice';
 import { Ingredient, Order } from '../../utils/types';
 import { Status } from '../../utils/statusEnum';
 

@@ -30,7 +30,7 @@ import Modal from '../modal/modal';
 import {
   fetchIngredients,
   setCurrentIngredient,
-} from '../../services/ingredients-slice';
+} from '../../services/ingredients-slice/ingredients-slice';
 
 import FeedDetailsPage from '../../pages/feed/feed-details';
 import FeedPage from '../../pages/feed/feed';

@@ -8,7 +8,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.css';
 import { AppDispatch, RootState } from '../../services/store';
-import { logoutUser, updateUser } from '../../services/auth-slice';
+import { logoutUser, updateUser } from '../../services/auth/auth-slice';
 import { User } from '../../utils/types';
 
 const ProfilePage: React.FC = () => {

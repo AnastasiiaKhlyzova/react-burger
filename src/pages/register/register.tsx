@@ -11,7 +11,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './register.module.css';
 import { Link } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../services/store';
-import { registerUser } from '../../services/auth-slice';
+import { registerUser } from '../../services/auth/auth-slice';
 
 const RegisterPage: React.FC = () => {
   const [name, setName] = React.useState('');
