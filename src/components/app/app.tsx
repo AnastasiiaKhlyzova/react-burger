@@ -35,6 +35,8 @@ import {
 import FeedDetailsPage from '../../pages/feed/feed-details';
 import FeedPage from '../../pages/feed/feed';
 
+const BASE_URL = '/react-burger';
+
 function App() {
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation || location;
@@ -73,84 +75,91 @@ function App() {
         <AppHeader />
         <main>
           <Routes location={backgroundLocation}>
-            <Route path="/react-burger" element={<HomePage />} />
-            <Route
-              path="/login"
-              element={<ProtectedRouteLogin element={<LoginPage />} />}
-            />
-            <Route
-              path="/register"
-              element={<ProtectedRouteLogin element={<RegisterPage />} />}
-            />
-            <Route
-              path="/forgot-password"
-              element={<ProtectedRouteLogin element={<ForgotPasswordPage />} />}
-            />
-            <Route
-              path="/reset-password"
-              element={
-                passwordResetRequested ? (
-                  <ProtectedRouteLogin element={<ResetPasswordPage />} />
-                ) : (
-                  <Navigate to="/forgot-password" replace />
-                )
-              }
-            />
-            <Route
-              path="/profile"
-              element={<ProtectedRouteElement element={<ProfilePage />} />}
-            >
-              <Route path="orders" element={<OrdersHistoryPage />} />
-            </Route>
-            <Route
-              path="/profile/orders/:id"
-              element={
-                <ProtectedRouteElement
-                  element={
-                    <OrderDetailsPage className={styles.feedDetailsPage} />
-                  }
-                />
-              }
-            />
+            <Route path="/react-burger">
+              <Route path="/react-burger/" element={<HomePage />}></Route>
 
-            <Route path="/ingredients/:id" element={<IngredientPage />} />
-            <Route path="/feed" element={<FeedPage />} />
-            <Route
-              path="/feed/:id"
-              element={<FeedDetailsPage className={styles.feedDetailsPage} />}
-            />
+              <Route
+                path="login"
+                element={<ProtectedRouteLogin element={<LoginPage />} />}
+              />
+              <Route
+                path="register"
+                element={<ProtectedRouteLogin element={<RegisterPage />} />}
+              />
+              <Route
+                path="forgot-password"
+                element={
+                  <ProtectedRouteLogin element={<ForgotPasswordPage />} />
+                }
+              />
+              <Route
+                path="reset-password"
+                element={
+                  passwordResetRequested ? (
+                    <ProtectedRouteLogin element={<ResetPasswordPage />} />
+                  ) : (
+                    <Navigate to="forgot-password" replace />
+                  )
+                }
+              />
+              <Route
+                path="profile"
+                element={<ProtectedRouteElement element={<ProfilePage />} />}
+              >
+                <Route path="orders" element={<OrdersHistoryPage />} />
+              </Route>
+              <Route
+                path="profile/orders/:id"
+                element={
+                  <ProtectedRouteElement
+                    element={
+                      <OrderDetailsPage className={styles.feedDetailsPage} />
+                    }
+                  />
+                }
+              />
+
+              <Route path="ingredients/:id" element={<IngredientPage />} />
+              <Route path="feed" element={<FeedPage />} />
+              <Route
+                path="feed/:id"
+                element={<FeedDetailsPage className={styles.feedDetailsPage} />}
+              />
+            </Route>
           </Routes>
 
           {backgroundLocation !== location && (
             <Routes>
-              <Route
-                path="/ingredients/:id"
-                element={
-                  <Modal onClose={() => navigate(-1)}>
-                    {currentIngredient ? (
-                      <IngredientDetails ingredient={currentIngredient} />
-                    ) : (
-                      <p>Загрузка...</p>
-                    )}
-                  </Modal>
-                }
-              />
-              <Route
-                path="/feed/:id"
-                element={
-                  <Modal onClose={() => navigate(-1)}>
-                    <FeedDetailsPage />
-                  </Modal>
-                }
-              />
-              <Route
-                path="/profile/orders/:id"
-                element={
-                  <Modal onClose={() => navigate(-1)}>
-                    <OrderDetailsPage />
-                  </Modal>
-                }
-              />
+              <Route path="/react-burger">
+                <Route
+                  path="ingredients/:id"
+                  element={
+                    <Modal onClose={() => navigate(-1)}>
+                      {currentIngredient ? (
+                        <IngredientDetails ingredient={currentIngredient} />
+                      ) : (
+                        <p>Загрузка...</p>
+                      )}
+                    </Modal>
+                  }
+                />
+                <Route
+                  path="feed/:id"
+                  element={
+                    <Modal onClose={() => navigate(-1)}>
+                      <FeedDetailsPage />
+                    </Modal>
+                  }
+                />
+                <Route
+                  path="profile/orders/:id"
+                  element={
+                    <Modal onClose={() => navigate(-1)}>
+                      <OrderDetailsPage />
+                    </Modal>
+                  }
+                />
+              </Route>
             </Routes>
           )}
         </main>

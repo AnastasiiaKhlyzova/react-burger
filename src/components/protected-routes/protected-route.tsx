@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../services/hooks';
 const ProtectedRouteElement: React.FC<{
   element: JSX.Element;
   redirectTo?: string;
-}> = ({ element, redirectTo = '/login' }) => {
+}> = ({ element, redirectTo = '/react-burger/login' }) => {
   const location = useLocation();
   const dispatch: AppDispatch = useAppDispatch();
   const { isAuthenticated, isUserLoading } = useAppSelector(

@@ -33,7 +33,7 @@ const BurgerIngredients: React.FC = () => {
 
   const handleIngredientClick = (ingredient: Ingredient) => {
     dispatch(setCurrentIngredient(ingredient));
-    navigate(`/ingredients/${ingredient._id}`, {
+    navigate(`/react-burger/ingredients/${ingredient._id}`, {
       state: { backgroundLocation: location },
     });
   };

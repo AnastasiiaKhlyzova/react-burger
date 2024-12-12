@@ -57,7 +57,7 @@ const BurgerConstructor: React.FC = () => {
 
   const handleOpenModal = () => {
     if (!token) {
-      navigate('/login');
+      navigate('/react-burger/login');
       return;
     }
 

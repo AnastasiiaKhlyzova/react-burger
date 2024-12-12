@@ -38,7 +38,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     const result = await dispatch(registerUser({ email, password, name }));
     if (registerUser.fulfilled.match(result)) {
-      const redirectTo = location.state?.from?.pathname || '/';
+      const redirectTo = location.state?.from?.pathname || '/react-burger';
       navigate(redirectTo, { replace: true });
     }
   };
@@ -84,7 +84,7 @@ const RegisterPage: React.FC = () => {
 
       <div className={`${styles.bottomLinks} mt-20`}>
         <p className="text text_type_main-default text_color_inactive">
-          Уже зарегистрированы? <Link to="/login">Войти</Link>
+          Уже зарегистрированы? <Link to="/react-burger/login">Войти</Link>
         </p>
       </div>
     </div>

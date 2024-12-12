@@ -1,5 +1,5 @@
 describe('Конструктор бургера работает корректно', () => {
-  const BASE_URL = 'http://localhost:3000';
+  const BASE_URL = 'http://localhost:3000/react-burger';
   const SELECTORS = {
     bunSection: 'h2:contains("Булки")',
     fillingSection: 'h2:contains("Начинки")',

@@ -47,7 +47,7 @@ const ResetPasswordPage: React.FC = () => {
 
       if (result.success) {
         dispatch(setPasswordResetRequested(false));
-        navigate('/login');
+        navigate('/react-burger/login');
       } else {
         setError(result.message || 'Что-то пошло не так. Попробуйте еще раз.');
       }
@@ -95,7 +95,7 @@ const ResetPasswordPage: React.FC = () => {
 
       <div className={`${styles.bottomLinks} mt-20`}>
         <p className="text text_type_main-default text_color_inactive">
-          Вспомнили пароль? <Link to="/login">Войти</Link>
+          Вспомнили пароль? <Link to="/react-burger/login">Войти</Link>
         </p>
       </div>
     </div>

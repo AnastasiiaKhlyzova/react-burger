@@ -34,7 +34,7 @@ const FeedPage: React.FC = () => {
   }, [dispatch]);
 
   const handleOrderClick = (order: Order) => {
-    navigate(`/feed/${order.number}`, {
+    navigate(`/react-burger/feed/${order.number}`, {
       state: { order, backgroundLocation: location },
     });
   };

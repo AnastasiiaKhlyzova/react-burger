@@ -26,7 +26,7 @@ const OrderHistoryPage: React.FC = () => {
   }, [dispatch]);
 
   const handleOrderClick = (orderNumber: string) => {
-    navigate(`/profile/orders/${orderNumber}`, {
+    navigate(`/react-burger/profile/orders/${orderNumber}`, {
       state: { backgroundLocation: location },
     });
   };
